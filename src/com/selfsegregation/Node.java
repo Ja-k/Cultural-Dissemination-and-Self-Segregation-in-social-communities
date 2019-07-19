@@ -3,19 +3,33 @@ package com.selfsegregation;
 import java.util.List;
 
 
-public class Node {
+public class Node implements Comparable<Node> {
+	private int id;
 	
-	private List<Integer> cultural_trait;
+
+	private List<Integer> F;
 	
-	Node(List<Integer> cultural_trait){
-		this.cultural_trait = cultural_trait;
-	}
+	// no Constructor yet
 	
-	public List<Integer> getCultural_trait() {
-		return cultural_trait;
+	public int getId() {
+		return id;
 	}
 
-	public void setCultural_trait(List<Integer> cultural_trait) {
-		this.cultural_trait = cultural_trait;
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public List<Integer> getF() {
+		return F;
+	}
+
+	public void setF(List<Integer> cultural_trait) {
+		this.F = cultural_trait;
+	}
+
+	@Override
+	public int compareTo(Node node) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
