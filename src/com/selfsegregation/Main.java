@@ -4,8 +4,8 @@ public class Main {
 	
 	public static double kronockerDelta(Node n1, Node n2){
 		double sum = 0;
-		for(int i = 0 ; i < n1.getCultural_trait().size() ; i++){
-			if( n1.getCultural_trait().get(i) == n2.getCultural_trait().get(i) ){
+		for(int i = 0 ; i < n1.getF().size() ; i++){
+			if( n1.getF().get(i) == n2.getF().get(i) ){
 				sum++;
 			}else continue;
 		}
