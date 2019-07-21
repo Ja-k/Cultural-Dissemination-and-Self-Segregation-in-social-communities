@@ -13,7 +13,7 @@ public class Node implements Comparable<Node> {
 	public Node(int id , int q){
 		this.id = id;
 		this.F = new ArrayList<Integer>();
-		for(int i = 0 ; i < q ; i++){
+		for(int i = 0 ; i < 10 ; i++){
 			F.add((int)(Math.random() * q) );
 		}
 	}

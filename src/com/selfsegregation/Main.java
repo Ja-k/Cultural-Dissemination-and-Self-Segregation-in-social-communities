@@ -1,7 +1,11 @@
 package com.selfsegregation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Main {
 	
@@ -74,12 +78,12 @@ public class Main {
 	public static void main(String[] args) {
 		
 		//============= Parameter Initialization ==================
-		int L = 5; 									// Lattice size
-		int q = 5 ;									// no. of cultures
+		int L = 10; 								// Lattice size
+		int q = 5 ;									// no. of cultures traits
 		double T; 									// Threshold
 		double h = 0.05; 							// Empty Sites Density in our Lattice
 		int N = (int)(( 1 - h ) * ( Math.pow(L,2)));// no. of agents
-		int F = 10;									// Cultural Feature of each Agent
+		int M ;										// No. of Iterations
  		//=========================================================
 				
 		List<Node> agents = generateAgents(N , q );
@@ -99,6 +103,194 @@ public class Main {
 		Node[][] square_lattice = populateLattice( agents , L);
 		printLattic(square_lattice , L );
 		
+		List<Node> segregated = new ArrayList<>();
+		
+		HashMap< Node , List<Node> > graph = new HashMap<>();
+		try{
+		for(int i = 0 ; i < square_lattice.length; i++){
+			for(int j = 0 ; j < square_lattice.length; j++){
+				if(square_lattice[i][j] != null){
+					if(j == 0 && i == 0){
+						List<Node> neighbors = new ArrayList<>();
+						if(square_lattice[i+1][j] != null){
+							neighbors.add(square_lattice[i+1][j]);
+						}
+						if(square_lattice[i][j+1] != null){
+							neighbors.add(square_lattice[i][j+1]);
+						}
+						if(neighbors.size() == 0){
+							segregated.add(square_lattice[i][j]);
+						}else{
+							graph.put(square_lattice[i][j], neighbors);
+						}
+												
+					}else if( i == 0 && ((j+1) <= square_lattice.length - 1) ){
+						List<Node> neighbors = new ArrayList<>();
+						if(square_lattice[i][j+1] != null){
+							neighbors.add(square_lattice[i][j+1]);
+						}
+						if(square_lattice[i][j-1] != null){
+							neighbors.add(square_lattice[i][j-1]);
+						}
+						if(square_lattice[i+1][j] != null){
+							neighbors.add(square_lattice[i+1][j]);
+						}
+						if(neighbors.size() == 0){
+							segregated.add(square_lattice[i][j]);
+						}else{
+							graph.put(square_lattice[i][j], neighbors);
+						}
+						//graph.put(square_lattice[i][j], neighbors);
+						
+					}else if( i == 0 && j == (square_lattice.length-1)){
+						List<Node> neighbors = new ArrayList<>();
+						if(square_lattice[i][j-1] != null){
+							neighbors.add(square_lattice[i][j-1]);
+						}
+						if(square_lattice[i+1][j] != null){
+							neighbors.add(square_lattice[i+1][j]);
+						}
+						if(neighbors.size() == 0){
+							segregated.add(square_lattice[i][j]);
+						}else{
+							graph.put(square_lattice[i][j], neighbors);
+						}
+						//graph.put(square_lattice[i][j], neighbors);
+						
+					}else if( j == 0 && ((i+1) <= square_lattice.length-1) ){
+						List<Node> neighbors = new ArrayList<>();
+						if(square_lattice[i-1][j] != null){
+							neighbors.add(square_lattice[i-1][j]);
+						}
+						if(square_lattice[i][j+1] != null){
+							neighbors.add(square_lattice[i][j+1]);
+						}
+						if(square_lattice[i+1][j] != null){
+							neighbors.add(square_lattice[i+1][j]);
+						}
+						if(neighbors.size() == 0){
+							segregated.add(square_lattice[i][j]);
+						}else{
+							graph.put(square_lattice[i][j], neighbors);
+						}
+						//graph.put(square_lattice[i][j], neighbors);
+						
+					}else if( j == (square_lattice.length - 1)&& ((i+1) <= square_lattice.length-1) ){
+						List<Node> neighbors = new ArrayList<>();
+						if(square_lattice[i-1][j] != null){
+							neighbors.add(square_lattice[i-1][j]);
+						}
+						if(square_lattice[i][j-1] != null){
+							neighbors.add(square_lattice[i][j-1]);
+						}
+						if(square_lattice[i+1][j] != null){
+							neighbors.add(square_lattice[i+1][j]);
+						}
+						if(neighbors.size() == 0){
+							segregated.add(square_lattice[i][j]);
+						}else{
+							graph.put(square_lattice[i][j], neighbors);
+						}
+						//graph.put(square_lattice[i][j], neighbors);
+						
+					}else if( (i == (square_lattice.length - 1)) && (j == 0)){
+						List<Node> neighbors = new ArrayList<>();
+						if(square_lattice[i-1][j] != null){
+							neighbors.add(square_lattice[i-1][j]);
+						}
+						if(square_lattice[i][j+1] != null){
+							neighbors.add(square_lattice[i][j+1]);
+						}
+						if(neighbors.size() == 0){
+							segregated.add(square_lattice[i][j]);
+						}else{
+							graph.put(square_lattice[i][j], neighbors);
+						}
+						//graph.put(square_lattice[i][j], neighbors);
+						
+					}else if( (i == square_lattice.length - 1)&& ((j+1) <= square_lattice.length - 1) ){
+						List<Node> neighbors = new ArrayList<>();
+						if(square_lattice[i][j-1] != null){
+							neighbors.add(square_lattice[i][j-1]);
+						}
+						if(square_lattice[i][j+1] != null){
+							neighbors.add(square_lattice[i][j+1]);
+						}
+						if(square_lattice[i-1][j] != null){
+							neighbors.add(square_lattice[i-1][j]);
+						}
+						if(neighbors.size() == 0){
+							segregated.add(square_lattice[i][j]);
+						}else{
+							graph.put(square_lattice[i][j], neighbors);
+						}
+						//graph.put(square_lattice[i][j], neighbors);
+						
+					}else if((i == (square_lattice.length - 1 ))&&(j == (square_lattice.length - 1))){
+						List<Node> neighbors = new ArrayList<>();
+						if(square_lattice[i][j-1] != null){
+							neighbors.add(square_lattice[i][j-1]);
+						}
+						if(square_lattice[i-1][j] != null){
+							neighbors.add(square_lattice[i-1][j]);
+						}
+						if(neighbors.size() == 0){
+							segregated.add(square_lattice[i][j]);
+						}else{
+							graph.put(square_lattice[i][j], neighbors);
+						}
+						//graph.put(square_lattice[i][j], neighbors);
+						
+					}else{
+						List<Node> neighbors = new ArrayList<>();
+						if(square_lattice[i][j+1] != null){
+							neighbors.add(square_lattice[i][j+1]);
+						}
+						if(square_lattice[i][j-1] != null){
+							neighbors.add(square_lattice[i][j-1]);
+						}
+						if(square_lattice[i+1][j] != null){
+							neighbors.add(square_lattice[i+1][j]);
+						}
+						if(square_lattice[i-1][j] != null){
+							neighbors.add(square_lattice[i-1][j]);
+						}
+						if(neighbors.size() == 0){
+							segregated.add(square_lattice[i][j]);
+						}else{
+							graph.put(square_lattice[i][j], neighbors);
+						}
+						//graph.put(square_lattice[i][j], neighbors);
+					}
+					
+				}else continue;
+			}
+		}//End of for loop
+		}catch(Exception e){
+			e.printStackTrace();
 		}
-
-}
+		
+		System.out.println("The graph size is = " + graph.size());
+		System.out.println("The No. of segregatd nodes  is = " + segregated.size());
+		
+		//For Printing the Graph to see each node's neighbors You can unComment the following code snippet
+		Set set = graph.entrySet();
+	      Iterator iterator = set.iterator();
+	      while(iterator.hasNext()) {
+	         Map.Entry mentry = (Map.Entry)iterator.next();
+	         System.out.print(mentry.getKey() + " -----> ");
+	         System.out.println(mentry.getValue());
+	      }
+	     /*
+	      Set set = hmap.entrySet();
+	      Iterator iterator = set.iterator();
+	      while(iterator.hasNext()) {
+	         Map.Entry mentry = (Map.Entry)iterator.next();
+	         System.out.print("key is: "+ mentry.getKey() + " & Value is: ");
+	         System.out.println(mentry.getValue());
+	      } 
+		*/
+		
+		
+	}//End of main method
+}// End of the class
