@@ -10,8 +10,12 @@ import java.util.Set;
 public class Main {
 	
 	//=============================================================
-	public static double randomGenerator(int interval){
-		double random = (int)((Math.random() *   interval )) ; 
+	public static double randomGenerator(int min,int interval){
+		double random = (int)((Math.random() *   (interval - min) )+ min) ; 
+		return random;
+	}
+	public static double doubleRandomGenerator(int min,int interval){
+		double random = ((Math.random() *   (interval - min) )+ min) ; 
 		return random;
 	}
 	/*
@@ -44,8 +48,8 @@ public class Main {
 		int row;
 		int column;
 		while(!(agents.isEmpty())){
-			row = (int)randomGenerator(L);
-			column = (int)randomGenerator(L);
+			row = (int)randomGenerator(0,L);
+			column = (int)randomGenerator(0,L);
 			if(square_lattice[row][column] == null){
 				square_lattice[row][column] = agents.get(0);
 				agents.remove(0);
@@ -72,6 +76,16 @@ public class Main {
 			System.out.print(" ]");
 			System.out.println();
 		}
+	}
+	public static double cultural_overlap(Node n1 , Node n2){
+		int sum = 0;
+		for(int i = 0 ; i < n1.getF().size();i++){
+			if(n1.getF().get(i) == n2.getF().get(i)){
+				sum++;
+			}else continue;
+		}
+		
+		return sum / n1.getF().size();
 	}
 	
 	//======================= Main Method ========================
@@ -103,8 +117,149 @@ public class Main {
 		Node[][] square_lattice = populateLattice( agents , L);
 		printLattic(square_lattice , L );
 		
-		List<Node> segregated = new ArrayList<>();
+		int counter = 0;
+		boolean first = true;
+		List<List<Node>> NeighborHood = new ArrayList<>();
+		System.out.println("Neighbor Identification in Process ... ");
+		System.out.println();
+		for(int i = 0 ; i < square_lattice.length; i++){
+			for(int j = 0 ; j < square_lattice.length ; j++ ){
+				if(first){}
+				else{counter++;}
+				if(square_lattice[i][j] != null){
+					if(j == 0 && i == 0){
+						List<Node> neighbors = new ArrayList<>();
+						neighbors.add(square_lattice[i][j]);
+						if(square_lattice[i+1][j] != null){
+							neighbors.add(square_lattice[i+1][j]);
+						}
+						if(square_lattice[i][j+1] != null){
+							neighbors.add(square_lattice[i][j+1]);
+						}
+						NeighborHood.add(neighbors);
+												
+					}else if( i == 0 && ((j+1) <= square_lattice.length - 1) ){
+						List<Node> neighbors = new ArrayList<>();
+						neighbors.add(square_lattice[i][j]);
+						if(square_lattice[i][j+1] != null){
+							neighbors.add(square_lattice[i][j+1]);
+						}
+						if(square_lattice[i][j-1] != null){
+							neighbors.add(square_lattice[i][j-1]);
+						}
+						if(square_lattice[i+1][j] != null){
+							neighbors.add(square_lattice[i+1][j]);
+						}
+						NeighborHood.add(neighbors);
+						
+						
+					}else if( i == 0 && j == (square_lattice.length-1)){
+						List<Node> neighbors = new ArrayList<>();
+						neighbors.add(square_lattice[i][j]);
+						if(square_lattice[i][j-1] != null){
+							neighbors.add(square_lattice[i][j-1]);
+						}
+						if(square_lattice[i+1][j] != null){
+							neighbors.add(square_lattice[i+1][j]);
+						}
+						NeighborHood.add(neighbors);
+						
+					}else if( j == 0 && ((i+1) <= square_lattice.length-1) ){
+						List<Node> neighbors = new ArrayList<>();
+						neighbors.add(square_lattice[i][j]);
+						if(square_lattice[i-1][j] != null){
+							neighbors.add(square_lattice[i-1][j]);
+						}
+						if(square_lattice[i][j+1] != null){
+							neighbors.add(square_lattice[i][j+1]);
+						}
+						if(square_lattice[i+1][j] != null){
+							neighbors.add(square_lattice[i+1][j]);
+						}
+						NeighborHood.add(neighbors);
+						
+					}else if( j == (square_lattice.length - 1)&& ((i+1) <= square_lattice.length-1) ){
+						List<Node> neighbors = new ArrayList<>();
+						neighbors.add(square_lattice[i][j]);
+						if(square_lattice[i-1][j] != null){
+							neighbors.add(square_lattice[i-1][j]);
+						}
+						if(square_lattice[i][j-1] != null){
+							neighbors.add(square_lattice[i][j-1]);
+						}
+						if(square_lattice[i+1][j] != null){
+							neighbors.add(square_lattice[i+1][j]);
+						}
+						NeighborHood.add(neighbors);
+						
+					}else if( (i == (square_lattice.length - 1)) && (j == 0)){
+						List<Node> neighbors = new ArrayList<>();
+						neighbors.add(square_lattice[i][j]);
+						if(square_lattice[i-1][j] != null){
+							neighbors.add(square_lattice[i-1][j]);
+						}
+						if(square_lattice[i][j+1] != null){
+							neighbors.add(square_lattice[i][j+1]);
+						}
+						NeighborHood.add(neighbors);
+						
+					}else if( (i == square_lattice.length - 1)&& ((j+1) <= square_lattice.length - 1) ){
+						List<Node> neighbors = new ArrayList<>();
+						neighbors.add(square_lattice[i][j]);
+						if(square_lattice[i][j-1] != null){
+							neighbors.add(square_lattice[i][j-1]);
+						}
+						if(square_lattice[i][j+1] != null){
+							neighbors.add(square_lattice[i][j+1]);
+						}
+						if(square_lattice[i-1][j] != null){
+							neighbors.add(square_lattice[i-1][j]);
+						}
+						NeighborHood.add(neighbors);
+						
+					}else if((i == (square_lattice.length - 1 ))&&(j == (square_lattice.length - 1))){
+						List<Node> neighbors = new ArrayList<>();
+						neighbors.add(square_lattice[i][j]);
+						if(square_lattice[i][j-1] != null){
+							neighbors.add(square_lattice[i][j-1]);
+						}
+						if(square_lattice[i-1][j] != null){
+							neighbors.add(square_lattice[i-1][j]);
+						}
+						
+						NeighborHood.add(neighbors);
+					}else{
+						List<Node> neighbors = new ArrayList<>();
+						neighbors.add(square_lattice[i][j]);
+						if(square_lattice[i][j+1] != null){
+							neighbors.add(square_lattice[i][j+1]);
+						}
+						if(square_lattice[i][j-1] != null){
+							neighbors.add(square_lattice[i][j-1]);
+						}
+						if(square_lattice[i+1][j] != null){
+							neighbors.add(square_lattice[i+1][j]);
+						}
+						if(square_lattice[i-1][j] != null){
+							neighbors.add(square_lattice[i-1][j]);
+						}
+						NeighborHood.add(neighbors);
+						
+					}
+					
+				}else continue;
+				
+			}
+		}
+ 		
 		
+		
+		
+		
+		
+		
+		/*
+		List<Node> segregated = new ArrayList<>();
 		HashMap< Node , List<Node> > graph = new HashMap<>();
 		try{
 		for(int i = 0 ; i < square_lattice.length; i++){
@@ -155,7 +310,7 @@ public class Main {
 						}else{
 							graph.put(square_lattice[i][j], neighbors);
 						}
-						//graph.put(square_lattice[i][j], neighbors);
+						graph.put(square_lattice[i][j], neighbors);
 						
 					}else if( j == 0 && ((i+1) <= square_lattice.length-1) ){
 						List<Node> neighbors = new ArrayList<>();
@@ -269,10 +424,11 @@ public class Main {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		*/
 		
-		System.out.println("The graph size is = " + graph.size());
-		System.out.println("The No. of segregatd nodes  is = " + segregated.size());
-		
+		//System.out.println("The graph size is = " + graph.size());
+		//System.out.println("The No. of segregatd nodes  is = " + segregated.size());
+		/*
 		//For Printing the Graph to see each node's neighbors You can unComment the following code snippet
 		Set set = graph.entrySet();
 	      Iterator iterator = set.iterator();
@@ -281,6 +437,7 @@ public class Main {
 	         System.out.print(mentry.getKey() + " -----> ");
 	         System.out.println(mentry.getValue());
 	      }
+	      */
 	     /*
 	      Set set = hmap.entrySet();
 	      Iterator iterator = set.iterator();
@@ -290,7 +447,14 @@ public class Main {
 	         System.out.println(mentry.getValue());
 	      } 
 		*/
-		
-		
+		System.out.println("Neighbor Identification is Done. It's as Follow : ");
+	      for(int n = 0 ; n < NeighborHood.size();n++){
+	    	  System.out.print(" "+NeighborHood.get(n).get(0).getId()+" -- > " );
+	    	  for(int m = 1; m < NeighborHood.get(n).size();m++){
+	    		  System.out.print(" "+NeighborHood.get(n).get(m).getId()+" , ");
+	    	  }
+	    	  System.out.println();
+	      }
+	      
 	}//End of main method
 }// End of the class
