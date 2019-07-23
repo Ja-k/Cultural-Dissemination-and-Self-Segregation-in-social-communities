@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Node implements Comparable<Node> {
+public class Node{
 	private int id;
 	
 
@@ -42,10 +42,4 @@ public class Node implements Comparable<Node> {
 		return "Node [id=" + id + "]";
 	}
 
-	@Override
-	public int compareTo(Node node) {
-		// TODO Auto-generated method stub
-		
-		return 0;
-	}
 }

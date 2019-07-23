@@ -29,7 +29,8 @@ public class Main {
 		return sum;
 	}
 	*/
-	//=============================================================
+	//==============================================================
+	
 	public static List<Node> generateAgents( int N ,int q ){
 		List<Node> agents = new ArrayList<>();
 		for(int n = 0 ; n < N ; n++){
@@ -88,13 +89,38 @@ public class Main {
 		return sum / n1.getF().size();
 	}
 	
+	public static void swap(Node n1,Node[][] square_lattice){ // second Arg. should be null to swap a null with a node.
+		for(int i = 0 ; i < square_lattice.length;i++){
+			for(int j = 0 ; j < square_lattice.length;j++){
+				if(square_lattice[i][j].getId() == n1.getId()){
+					square_lattice[i][j] = null;
+					break; // back to 'while' loop
+				}
+			}
+		}
+		
+	}
+	public static void replaceNode(Node n, Node[][] square_lattice){
+		boolean replaced = false;
+		int row;
+		int column;
+		while(!replaced){
+		row = (int)randomGenerator(0,square_lattice.length );
+		column = (int)randomGenerator(0,square_lattice.length );
+		if(square_lattice[row][column] == null ){
+			swap( n , square_lattice );
+			square_lattice[row][column] = n ;
+			replaced = true;
+			}else continue;
+		}
+	}
 	//======================= Main Method ========================
 	public static void main(String[] args) {
 		
 		//============= Parameter Initialization ==================
 		int L = 10; 								// Lattice size
 		int q = 5 ;									// no. of cultures traits
-		double T; 									// Threshold
+		double T = 0.5; 									// Threshold
 		double h = 0.05; 							// Empty Sites Density in our Lattice
 		int N = (int)(( 1 - h ) * ( Math.pow(L,2)));// no. of agents
 		int M ;										// No. of Iterations
@@ -251,12 +277,7 @@ public class Main {
 				
 			}
 		}
- 		
-		
-		
-		
-		
-		
+ 				
 		
 		/*
 		List<Node> segregated = new ArrayList<>();
@@ -447,7 +468,8 @@ public class Main {
 	         System.out.println(mentry.getValue());
 	      } 
 		*/
-		System.out.println("Neighbor Identification is Done. It's as Follow : ");
+		
+		System.out.println("Neighbor Identification is Done. It's as Follow : " + NeighborHood.size());
 	      for(int n = 0 ; n < NeighborHood.size();n++){
 	    	  System.out.print(" "+NeighborHood.get(n).get(0).getId()+" -- > " );
 	    	  for(int m = 1; m < NeighborHood.get(n).size();m++){
@@ -456,5 +478,33 @@ public class Main {
 	    	  System.out.println();
 	      }
 	      
+	      //Calculation of cultural overlap and mobility probability
+	    int random;  
+	    for(int i = 0 ; i < NeighborHood.size() ; i++){
+	    	random = (int)randomGenerator(1 , NeighborHood.get(i).size());
+	    	Node randomNode = NeighborHood.get(i).get(random);
+	    	double overlap = cultural_overlap(NeighborHood.get(i).get(0),randomNode);
+	    	double r = doubleRandomGenerator(0,1);
+	    	if( r < overlap ){
+	    		copy(NeighborHood.get(i).get(0),randomNode);
+	    	}
+	    	double averageOverlap = average_overlap(NeighborHood.get(i)); 
+	    	if(averageOverlap < T){
+	    		replaceNode(NeighborHood.get(i).get(0),square_lattice);
+	    	}
+	    }  
 	}//End of main method
+	
+	public static double average_overlap(List<Node> list) {
+		double sum = 0;
+		for(int s = 1 ; s < list.size();s++){
+			sum += cultural_overlap(list.get(0),list.get(s));
+		}
+		return sum / list.size();
+	}
+	public static void copy(Node node, Node randomNode) {
+		int random = (int)randomGenerator(0,node.getF().size());
+		node.getF().set(random,randomNode.getF().get(random) );
+	}
+	
 }// End of the class
