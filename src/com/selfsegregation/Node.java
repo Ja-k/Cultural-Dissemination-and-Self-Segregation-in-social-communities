@@ -26,6 +26,10 @@ public class Node{
 		this.id = id;
 	}
 	
+	public void setF(List<Integer> f) {
+		F = f;
+	}
+
 	public List<Integer> getF() {
 		return F;
 	}
