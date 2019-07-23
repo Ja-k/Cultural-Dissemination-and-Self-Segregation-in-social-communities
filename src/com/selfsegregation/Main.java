@@ -503,8 +503,14 @@ public class Main {
 		return sum / list.size();
 	}
 	public static void copy(Node node, Node randomNode) {
-		int random = (int)randomGenerator(0,node.getF().size());
-		node.getF().set(random,randomNode.getF().get(random) );
+		boolean copied = false;
+		while(!copied){
+			int random = (int)randomGenerator(0,node.getF().size());
+			if(node.getF().get(random) != randomNode.getF().get(random)){
+				node.getF().set(random,randomNode.getF().get(random) );
+				copied = true;
+			}
+		}
 	}
 	
 }// End of the class
