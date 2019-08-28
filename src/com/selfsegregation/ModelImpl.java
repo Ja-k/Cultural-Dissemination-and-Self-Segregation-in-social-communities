@@ -47,7 +47,12 @@ public class ModelImpl implements Model {
 	public void setQ(double q) {
 		this.q = q;
 	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see com.selfsegregation.Model#generateAgents(int, int)
+	 * This method generates N agents present in the square lattice space
+	 * the number of agents would be bases on N formula
+	 */
 	@Override
 	public List<Node> generateAgents(int N, int q) {
 		List<Node> agents = new ArrayList<>();
@@ -57,6 +62,13 @@ public class ModelImpl implements Model {
 		System.out.println("Agents Generated.");
 		return agents;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.selfsegregation.Model#populateLattice(java.util.List, int)
+	 * This method place the agents through out the square lattice space according to 
+	 * defined conditions (Randomization in selecting the site).
+	 */
 
 	@Override
 	public Node[][] populateLattice(List<Node> agents, int L) {
@@ -80,6 +92,12 @@ public class ModelImpl implements Model {
 		return square_lattice;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.selfsegregation.Model#cultural_overlap(com.selfsegregation.Node, com.selfsegregation.Node)
+	 * This method measures the cultural similarity between two agents n1 and n2 by using Kronecker's
+	 * delta function.
+	 */
 	@Override
 	public double cultural_overlap(Node n1, Node n2) {
 		double sum = 0;
@@ -94,7 +112,12 @@ public class ModelImpl implements Model {
 		// System.out.println("The Overlap value is : "+overlap);
 		return overlap;
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.selfsegregation.Model#swap(com.selfsegregation.Node, com.selfsegregation.Node[][])
+	 * This method is defined to null the current position of the node which we want to replace it in lattice.
+	 */
 	@Override
 	public void swap(Node n1, Node[][] square_lattice)
 			throws NullPointerException {
@@ -117,7 +140,12 @@ public class ModelImpl implements Model {
 		}
 
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.selfsegregation.Model#replaceNode(com.selfsegregation.Node, com.selfsegregation.Node[][], int)
+	 * This method find the a random new empty site to replace with the a node that has to be replaced.
+	 */
 	@Override
 	public void replaceNode(Node n, Node[][] square_lattice, int q) {
 		boolean replaced = false;
@@ -136,7 +164,12 @@ public class ModelImpl implements Model {
 		}
 
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.selfsegregation.Model#average_overlap(java.util.List)
+	 * This method measure the average cultural similarity between a node and it's neighbors
+	 */
 	@Override
 	public double average_overlap(List<Node> list) {
 		double sum = 0;
@@ -145,7 +178,13 @@ public class ModelImpl implements Model {
 		}
 		return (double) (sum / list.size());
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.selfsegregation.Model#copy(com.selfsegregation.Node, com.selfsegregation.Node)
+	 * This method is defined to copy one one of the cultural features of a random neighbor if 
+	 * the condition is met.
+	 */
 	@Override
 	public void copy(Node node, Node randomNode) {
 		boolean copied = false;
@@ -159,6 +198,12 @@ public class ModelImpl implements Model {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.selfsegregation.Model#mobility_prob(double, double)
+	 * This method calculate the mobility probability of the node based on average cultural overlap and 
+	 * using Heaviside step function.
+	 */
 	@Override
 	public double mobility_prob(double avg_overlap, double threshold) {
 		double x = 0;
@@ -169,6 +214,12 @@ public class ModelImpl implements Model {
 		return (double) ((1 - avg_overlap) * x);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.selfsegregation.Model#mobility(java.util.List)
+	 * This method calculate the mobility probability of whole system using the mobility 
+	 * of each node calculated by another method (i.e. moblity_prob) using Heaviside step function
+	 */
 	@Override
 	public double mobility(List<Double> m) {
 		double sum = 0;
@@ -178,12 +229,27 @@ public class ModelImpl implements Model {
 		return (double) (sum / m.size());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.selfsegregation.Model#randomGenerator(int, int)
+	 * This method is to generate a random integer value between an
+	 *  interval(e.g. selecting random neighbor)
+	 */
 	@Override
 	public int randomGenerator(int min, int interval) {
 		int random = (int) ((Math.random() * (interval - min)) + min);
 		return random;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.selfsegregation.Model#findNeighbors(com.selfsegregation.Node[][])
+	 * This method is to find the neighbors of each agent in Von Neumann neighborhood
+	 * by looping over each site in square lattice by considering the place of the agent
+	 * in the lattice space by providing it's position.
+	 * It returns a list of list of nodes such that the first element of each list, the 
+	 * agent itself is present and neighbors in next indexes of the list.
+	 */
 	@Override
 	public List<List<Node>> findNeighbors(Node[][] square_lattice) {
 		System.out.println("Neighbor Identification in Process ... ");
