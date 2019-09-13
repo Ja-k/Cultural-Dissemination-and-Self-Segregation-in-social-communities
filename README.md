@@ -5,7 +5,7 @@ This project is based on Axelrod's model which is designed to study cultural dis
 Java 1.8.0
 
 ## IDE
-Eclipse Standard/SDK
+Eclipse Standard/SDK\
 Version: Kepler Service Release 2
 
 ## More Details
